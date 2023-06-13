@@ -96,6 +96,7 @@ func TestExcel(t *testing.T) {
 	//}
 }
 
+// 并发访问接口例子
 func TestGpt4Math(t *testing.T) {
 
 	// 读文件
@@ -201,4 +202,61 @@ func TestGpt4Math(t *testing.T) {
 	if err := f.SaveAs("gptData返回数据5.xlsx"); err != nil {
 		fmt.Println(err)
 	}
+}
+
+func TestText4Question(t *testing.T) {
+
+	// 读文件
+	defer timeCost(time.Now())
+	f, rows, err := FileToRows("./excel/内容云试题信息0613.xlsx", "Sheet1")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// 读行
+	var badCase []int
+	for i, row := range rows {
+		// 跳过表头,且跳过没有有效数据的行
+		if i == 0 || len(row) < 3 {
+			continue
+		}
+
+		if i > 197893 {
+			break
+		}
+
+		// 获取写库数据
+		questionText := row[2]
+		cell := fmt.Sprintf("D%d", i+1)
+		id, err := GetText4QuestionData(questionText)
+		if err != nil {
+			badCase = append(badCase, i)
+			_ = f.SetCellValue("Sheet1", cell, err.Error())
+			continue
+		}
+
+		// 写文件
+		fmt.Println("请求与返回信息：", i, questionText, id)
+		err = f.SetCellValue("Sheet1", cell, id)
+		if err != nil {
+			return
+		}
+
+		if i%1000 == 0 { // 每 1000 次保存一次数据
+			// 保存文件
+			if err := f.SaveAs("./excel/[结果]内容云试题信息0613.xlsx"); err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println("保存成功：", i)
+		}
+	}
+
+	fmt.Println(badCase)
+
+	// 保存文件
+	if err := f.SaveAs("./excel/[结果]内容云试题信息0613.xlsx"); err != nil {
+		fmt.Println(err)
+	}
+
 }

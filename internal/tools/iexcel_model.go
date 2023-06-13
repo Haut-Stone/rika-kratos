@@ -1,13 +1,21 @@
 package tools
 
 const (
-	DbTestUrl       = "https://qz.chengjiukehu.com/test/bx-question-service/njf/question/create"
-	DbOnlineUrl     = "https://api-internal.tipaipai.com/bx-question-service/njf/question/create"
-	AnswerTestUrl   = "https://internal-test-baodian.tal.com/base-search/api/v1/recommend/question/medium"
-	AnswerOnlineUrl = "https://internal-baodian.tal.com/base-search/api/v1/recommend/question/medium"
-	Gpt4Url         = "https://hmi.chengjiukehu.com/gpt-service-develop/v1/condition/chat/completions"
-	Gpt4Prompt      = "根据给的示范例题的解题方法逐步思考给定的数学题目，确保各步骤准确无误，讲解详细。\n以下是示范例题的解题方法：{{asr}}\n以下是给定的数学题目：{{question}}"
-	Template        = "<div class=\"question-item-container\"><img class=\"question-item-pic\" src=\"{{IMAGE_URL}}\"><p class=\"ocr_text_invisible\">{{OCR_TXT}}</p></div>"
+	DbOnlineUrl            = "https://api-internal.tipaipai.com/bx-question-service/njf/question/create"
+	AnswerOnlineUrl        = "https://internal-baodian.tal.com/base-search/api/v1/recommend/question/medium"
+	Text4QuestionOnlineUrl = "http://10.156.66.74/search/jf/question/content"
+)
+
+const (
+	DbTestUrl            = "https://qz.chengjiukehu.com/test/bx-question-service/njf/question/create"
+	AnswerTestUrl        = "https://internal-test-baodian.tal.com/base-search/api/v1/recommend/question/medium"
+	Text4QuestionTestUrl = "https://qz.chengjiukehu.com/test/qingzhou-search-api/search/jf/question/content"
+)
+
+const (
+	Gpt4Url    = "https://hmi.chengjiukehu.com/gpt-service-develop/v1/condition/chat/completions"
+	Gpt4Prompt = "根据给的示范例题的解题方法逐步思考给定的数学题目，确保各步骤准确无误，讲解详细。\n以下是示范例题的解题方法：{{asr}}\n以下是给定的数学题目：{{question}}"
+	Template   = "<div class=\"question-item-container\"><img class=\"question-item-pic\" src=\"{{IMAGE_URL}}\"><p class=\"ocr_text_invisible\">{{OCR_TXT}}</p></div>"
 )
 
 type DbReq struct {
@@ -69,4 +77,23 @@ type AIData struct {
 
 type InnerData struct {
 	QuestionId string `json:"question_id"`
+}
+
+type Text4QuestionResp struct {
+	ErrorCode  int               `json:"error_code"`
+	ErrorMsg   string            `json:"error_msg"`
+	ServerTime int64             `json:"server_time"`
+	TraceId    string            `json:"trace_id"`
+	Data       Text4QuestionData `json:"data"`
+}
+
+type Text4QuestionData struct {
+	Total       int        `json:"total"`
+	QuestionArr []Question `json:"questionArr"`
+}
+
+type Question struct {
+	Question     string  `json:"question"`
+	QuestionId   string  `json:"question_id"`
+	MatchPercent float32 `json:"match_percent"`
 }
