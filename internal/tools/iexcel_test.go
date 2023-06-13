@@ -205,7 +205,6 @@ func TestGpt4Math(t *testing.T) {
 }
 
 func TestText4Question(t *testing.T) {
-
 	// 读文件
 	defer timeCost(time.Now())
 	f, rows, err := FileToRows("./excel/内容云试题信息0613.xlsx", "Sheet1")
@@ -251,12 +250,90 @@ func TestText4Question(t *testing.T) {
 			fmt.Println("保存成功：", i)
 		}
 	}
-
 	fmt.Println(badCase)
 
 	// 保存文件
 	if err := f.SaveAs("./excel/[结果]内容云试题信息0613.xlsx"); err != nil {
 		fmt.Println(err)
 	}
+}
 
+// 并发读接口的模板
+func TestConnGet(t *testing.T) {
+
+	// 计时
+	defer timeCost(time.Now())
+
+	// 读文件
+	f, rows, err := FileToRows("./excel/test.xlsx", "Sheet1")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// 并发控制
+	var m sync.Map                   // 同步数据
+	var wg sync.WaitGroup            // 主线程等待
+	useCount := 1200                 // 到多少停止
+	maxCon := 5                      // 并发数
+	var badCase []int                // 错误数
+	c := make(chan struct{}, maxCon) // 并发数量控制
+	defer close(c)
+
+	for i, row := range rows {
+		// 跳过表头,且跳过没有有效数据的行
+		if i == 0 || len(row) < 3 {
+			continue
+		}
+		if i > useCount {
+			break // 到多少直接停止
+		}
+
+		// 填入循环所需数据
+		c <- struct{}{}
+		wg.Add(1)
+		questionText := row[2]
+		idx := i
+
+		// 并发线程
+		go func() {
+			defer wg.Done()
+
+			// 处理流程
+			cell := fmt.Sprintf("D%d", idx+1)
+			id, err := GetText4QuestionDataTest(questionText)
+			if err != nil {
+				badCase = append(badCase, idx)
+				_ = f.SetCellValue("Sheet1", cell, err.Error())
+				m.Store(idx, "无数据")
+				<-c
+				return
+			}
+			m.Store(idx, cast.ToString(id))
+			fmt.Println("请求与返回信息：", idx, questionText, id)
+			err = f.SetCellValue("Sheet1", cell, id)
+			<-c
+			if err != nil {
+				return
+			}
+		}()
+
+		if i%500 == 0 {
+			wg.Wait()
+			// 保存文件
+			if err := f.SaveAs("./excel/[结果]test.xlsx"); err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println("保存成功：", i)
+		}
+	}
+
+	wg.Wait()
+
+	fmt.Println(badCase)
+
+	// 保存文件
+	if err := f.SaveAs("./excel/[结果]test.xlsx"); err != nil {
+		fmt.Println(err)
+	}
 }

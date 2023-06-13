@@ -240,3 +240,76 @@ func GetText4QuestionData(question string) (id int, err error) {
 
 	return cast.ToInt(dbResp.Data.QuestionArr[0].QuestionId), nil
 }
+
+func GetText4QuestionDataTest(question string) (id int, err error) {
+
+	params := map[string]interface{}{
+		"words": question,
+	}
+
+	var u = url.Values{}
+	for k, v := range params {
+		u.Add(k, fmt.Sprintf("%v", v))
+	}
+	fmt.Println(u)
+	req, _ := http.NewRequest("POST", Text4QuestionTestUrl, strings.NewReader(u.Encode()))
+
+	// 设置 header online
+	//u2, _ := uuid.NewV4()
+	//var (
+	//	timestamp = strconv.Itoa(int(time.Now().Unix()))
+	//	appKey    = "101135b0bc4c7fcddecb3dbbe7692198"
+	//	appSecret = "51607f8df33a23cd6f6a293a7b962367"
+	//	nonce     = fmt.Sprintf("%d-%s", time.Now().UnixMicro(), u2)
+	//)
+	//req.Header.Set("X-Qz-AccountId", "123456789")
+	//req.Header.Set("X-Qz-DeviceId", "script_123456")
+
+	// 设置 header 测试
+	u2, _ := uuid.NewV4()
+	var (
+		timestamp = strconv.Itoa(int(time.Now().Unix()))
+		appKey    = "a8054bc4bfc4babbec4d7a42deee4880"
+		appSecret = "62c17c869d2d45d1dcfd0c28223fc4ed"
+		nonce     = fmt.Sprintf("%d-%s", time.Now().UnixMicro(), u2)
+	)
+
+	// 通用
+	md5Str := "X-Qz-Timestamp=" + timestamp + "&X-Qz-Nonce=" + nonce + "&X-Qz-AppKey=" + appKey + "&app_secret=" + appSecret
+	data := []byte(md5Str)
+	md5New := md5.New()
+	md5New.Write(data)
+	sign := hex.EncodeToString(md5New.Sum(nil))
+	req.Header.Set("X-Qz-Nonce", nonce)
+	req.Header.Set("X-Qz-Timestamp", timestamp)
+	req.Header.Set("X-Qz-AppKey", appKey)
+	req.Header.Set("X-Qz-Sign", sign)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("caller", "search-xxj-0613")
+	resp, err := (&http.Client{}).Do(req) //nolint:bodyclose
+	if err != nil {
+		fmt.Println("获取数据库失败", err)
+		return 0, err
+	}
+	var dbResp Text4QuestionResp
+	respByte, _ := ioutil.ReadAll(resp.Body)
+	err = json.Unmarshal(respByte, &dbResp)
+	if err != nil {
+		fmt.Println("解析Text4Question返回数据出错", err)
+		return 0, err
+	}
+	fmt.Println(dbResp)
+
+	if dbResp.ErrorCode != 0 {
+		fmt.Println("访问Text4QuestionResp接口出错", err)
+		return 0, errors.New(dbResp.ErrorCode, "", dbResp.ErrorMsg)
+	}
+
+	if len(dbResp.Data.QuestionArr) == 0 {
+		return -1, nil
+	}
+
+	fmt.Println("traceId: ", dbResp.TraceId)
+
+	return cast.ToInt(dbResp.Data.QuestionArr[0].QuestionId), nil
+}
