@@ -1,6 +1,8 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/transport/http/pprof"
 	v1 "helloworld/api/helloworld/v1"
 	"helloworld/internal/conf"
 	"helloworld/internal/service"
@@ -28,5 +30,7 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+	srv.HandlePrefix("/", pprof.NewHandler())
+	kratos.New(kratos.Server(srv)).Run()
 	return srv
 }
