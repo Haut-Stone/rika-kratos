@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"helloworld/internal/data/model"
 
 	"helloworld/internal/biz"
 
@@ -22,6 +23,9 @@ func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
 }
 
 func (r *greeterRepo) Save(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
+	r.data.db.Table("wide_cut").Create(&model.WideCut{
+		Name: g.Hello,
+	})
 	return g, nil
 }
 
