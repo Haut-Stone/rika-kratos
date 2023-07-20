@@ -23,9 +23,15 @@ func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
 }
 
 func (r *greeterRepo) Save(ctx context.Context, g *biz.Greeter) (*biz.Greeter, error) {
-	r.data.db.Table("wide_cut").Create(&model.WideCut{
-		Name: g.Hello,
-	})
+	if g.TableName != "" {
+		r.data.db.Table("wide_cut_" + g.TableName).Create(&model.WideCut{
+			Name: g.Hello,
+		})
+	} else {
+		r.data.db.Create(&model.WideCut{
+			Name: g.Hello,
+		})
+	}
 	return g, nil
 }
 

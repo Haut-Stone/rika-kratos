@@ -2,11 +2,11 @@ package biz
 
 import (
 	"context"
-
-	v1 "helloworld/api/helloworld/v1"
-
+	"crypto/rand"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
+	v1 "helloworld/api/helloworld/v1"
+	"math/big"
 )
 
 var (
@@ -16,7 +16,8 @@ var (
 
 // Greeter is a Greeter model.
 type Greeter struct {
-	Hello string
+	Hello     string
+	TableName string
 }
 
 // GreeterRepo is a Greater repo.
@@ -42,5 +43,15 @@ func NewGreeterUsecase(repo GreeterRepo, logger log.Logger) *GreeterUsecase {
 // CreateGreeter creates a Greeter, and returns the new Greeter.
 func (uc *GreeterUsecase) CreateGreeter(ctx context.Context, g *Greeter) (*Greeter, error) {
 	uc.log.WithContext(ctx).Infof("CreateGreeter: %v", g.Hello)
+	result, _ := rand.Int(rand.Reader, big.NewInt(3))
+	res := result.Int64() + 6
+	if res == 6 {
+		g.TableName = "2306"
+	} else if res == 7 {
+		g.TableName = "2307"
+	} else {
+		g.TableName = "2308"
+	}
+	g.Hello = g.Hello + g.TableName
 	return uc.repo.Save(ctx, g)
 }
