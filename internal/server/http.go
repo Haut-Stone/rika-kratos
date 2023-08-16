@@ -1,15 +1,14 @@
 package server
 
 import (
-	"github.com/go-kratos/kratos/v2"
+	"github.com/felixge/fgprof"
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-kratos/kratos/v2/transport/http/pprof"
 	v1 "helloworld/api/helloworld/v1"
 	"helloworld/internal/conf"
 	"helloworld/internal/service"
-
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
 // NewHTTPServer new an HTTP server.
@@ -29,8 +28,8 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
+	srv.HandlePrefix("/debug/pprof/", pprof.NewHandler())
+	srv.Handle("/debug/fgprof", fgprof.Handler())
 	v1.RegisterGreeterHTTPServer(srv, greeter)
-	srv.HandlePrefix("/", pprof.NewHandler())
-	kratos.New(kratos.Server(srv)).Run()
 	return srv
 }
