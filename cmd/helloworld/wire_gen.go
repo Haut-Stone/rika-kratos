@@ -31,10 +31,10 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	greeterRepo := data.NewGreeterRepo(dataData, logger)
 	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
 	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
 	videoRepo := data.NewVideoRepo(dataData, logger)
 	videoUsecase := biz.NewVideoUsecase(videoRepo, logger)
 	videoService := service.NewVideoService(videoUsecase)
+	grpcServer := server.NewGRPCServer(confServer, greeterService, videoService, logger)
 	httpServer := server.NewHTTPServer(confServer, greeterService, videoService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {

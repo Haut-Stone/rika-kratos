@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	pb "helloworld/api/helloworld/v1"
 	"helloworld/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -19,6 +20,10 @@ func NewVideoRepo(data *Data, logger log.Logger) biz.VideoRepo { // - repo çš„å®
 	}
 }
 
-func (v *videoRepo) Save(ctx context.Context, g *biz.Video) (*biz.Video, error) {
-	return nil, nil
+func (v *videoRepo) Save(ctx context.Context, r *pb.CreateVideoRequest) (bool, error) {
+	err := v.data.rdb.LPush(ctx, "videos", r.Name+"."+r.Format).Err()
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

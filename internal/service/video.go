@@ -21,5 +21,11 @@ func (s *VideoService) CreateVideo(ctx context.Context, req *pb.CreateVideoReque
 }
 
 func (s *VideoService) HttpCreateVideo(ctx context.Context, req *pb.CreateVideoRequest) (*pb.CreateVideoReply, error) {
-	return &pb.CreateVideoReply{}, nil
+	success, err := s.uc.CreateVideo(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateVideoReply{
+		Success: success,
+	}, nil
 }
