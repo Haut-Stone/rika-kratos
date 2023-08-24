@@ -2,12 +2,20 @@ syntax = "proto3";
 
 package api.helloworld.v1;
 
+import "google/api/annotations.proto";
+
 option go_package = "helloworld/api/helloworld/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.helloworld.v1";
 
 service Video {
   rpc CreateVideo (CreateVideoRequest) returns (CreateVideoReply);
+  rpc HttpCreateVideo (CreateVideoRequest) returns (CreateVideoReply) {
+    option (google.api.http) = {
+      post: "/creat/video"
+      body: "*"
+    };
+  }
 }
 
 message CreateVideoRequest {

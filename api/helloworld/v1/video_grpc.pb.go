@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Video_CreateVideo_FullMethodName = "/api.helloworld.v1.Video/CreateVideo"
+	Video_CreateVideo_FullMethodName     = "/api.helloworld.v1.Video/CreateVideo"
+	Video_HttpCreateVideo_FullMethodName = "/api.helloworld.v1.Video/HttpCreateVideo"
 )
 
 // VideoClient is the client API for Video service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type VideoClient interface {
 	CreateVideo(ctx context.Context, in *CreateVideoRequest, opts ...grpc.CallOption) (*CreateVideoReply, error)
+	HttpCreateVideo(ctx context.Context, in *CreateVideoRequest, opts ...grpc.CallOption) (*CreateVideoReply, error)
 }
 
 type videoClient struct {
@@ -46,11 +48,21 @@ func (c *videoClient) CreateVideo(ctx context.Context, in *CreateVideoRequest, o
 	return out, nil
 }
 
+func (c *videoClient) HttpCreateVideo(ctx context.Context, in *CreateVideoRequest, opts ...grpc.CallOption) (*CreateVideoReply, error) {
+	out := new(CreateVideoReply)
+	err := c.cc.Invoke(ctx, Video_HttpCreateVideo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServer is the server API for Video service.
 // All implementations must embed UnimplementedVideoServer
 // for forward compatibility
 type VideoServer interface {
 	CreateVideo(context.Context, *CreateVideoRequest) (*CreateVideoReply, error)
+	HttpCreateVideo(context.Context, *CreateVideoRequest) (*CreateVideoReply, error)
 	mustEmbedUnimplementedVideoServer()
 }
 
@@ -60,6 +72,9 @@ type UnimplementedVideoServer struct {
 
 func (UnimplementedVideoServer) CreateVideo(context.Context, *CreateVideoRequest) (*CreateVideoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateVideo not implemented")
+}
+func (UnimplementedVideoServer) HttpCreateVideo(context.Context, *CreateVideoRequest) (*CreateVideoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HttpCreateVideo not implemented")
 }
 func (UnimplementedVideoServer) mustEmbedUnimplementedVideoServer() {}
 
@@ -92,6 +107,24 @@ func _Video_CreateVideo_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Video_HttpCreateVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateVideoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServer).HttpCreateVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Video_HttpCreateVideo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServer).HttpCreateVideo(ctx, req.(*CreateVideoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Video_ServiceDesc is the grpc.ServiceDesc for Video service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +135,10 @@ var Video_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateVideo",
 			Handler:    _Video_CreateVideo_Handler,
+		},
+		{
+			MethodName: "HttpCreateVideo",
+			Handler:    _Video_HttpCreateVideo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

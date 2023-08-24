@@ -19,3 +19,7 @@ func NewVideoService(uc *biz.VideoUsecase) *VideoService {
 func (s *VideoService) CreateVideo(ctx context.Context, req *pb.CreateVideoRequest) (*pb.CreateVideoReply, error) {
 	return &pb.CreateVideoReply{}, nil
 }
+
+func (s *VideoService) HttpCreateVideo(ctx context.Context, req *pb.CreateVideoRequest) (*pb.CreateVideoReply, error) {
+	return &pb.CreateVideoReply{}, nil
+}
