@@ -8,19 +8,19 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 )
 
-type videoRepo struct {
+type videoRedisRepo struct {
 	data *Data
 	log  *log.Helper
 }
 
 func NewVideoRepo(data *Data, logger log.Logger) biz.VideoRepo { // - repo 的实现
-	return &videoRepo{
+	return &videoRedisRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
 }
 
-func (v *videoRepo) Save(ctx context.Context, r *pb.CreateVideoRequest) (bool, error) {
+func (v *videoRedisRepo) Save(ctx context.Context, r *pb.CreateVideoRequest) (bool, error) {
 	err := v.data.rdb.LPush(ctx, "videos", r.Name+"."+r.Format).Err()
 	if err != nil {
 		return false, err

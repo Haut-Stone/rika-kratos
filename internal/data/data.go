@@ -11,7 +11,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewVideoRepo)
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewVideoMysqlRepo) // - 如果需要切换数据实现,只需要在这里更换 provider 就可以了
 
 // Data .
 type Data struct {
