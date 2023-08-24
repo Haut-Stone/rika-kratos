@@ -28,6 +28,6 @@ func NewGRPCServer(c *conf.Server, greeter *service.GreeterService, video *servi
 	}
 	srv := grpc.NewServer(opts...)
 	v1.RegisterGreeterServer(srv, greeter)
-	v1.RegisterVideoServer(srv, video) // - 这里要手动注册,只前的东西才会加载
+	v1.RegisterVideoServer(srv, video)
 	return srv
 }

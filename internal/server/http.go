@@ -31,6 +31,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, video *servi
 	srv.HandlePrefix("/debug/pprof/", pprof.NewHandler())
 	srv.Handle("/debug/fgprof", fgprof.Handler())
 	v1.RegisterGreeterHTTPServer(srv, greeter)
-	v1.RegisterVideoHTTPServer(srv, video)
+	v1.RegisterVideoHTTPServer(srv, video) // ! 这里要手动注册,只前的东西才会加载
 	return srv
 }
