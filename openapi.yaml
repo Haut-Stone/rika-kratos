@@ -3,19 +3,19 @@
 
 openapi: 3.0.3
 info:
-    title: Video API
+    title: Demo API
     version: 0.0.1
 paths:
-    /creat/video:
+    /test:
         post:
             tags:
-                - Video
-            operationId: Video_HttpCreateVideo
+                - Demo
+            operationId: Demo_Test
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateVideoRequest'
+                            $ref: '#/components/schemas/TestRequest'
                 required: true
             responses:
                 "200":
@@ -23,7 +23,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CreateVideoReply'
+                                $ref: '#/components/schemas/TestReply'
                 default:
                     description: Default error response
                     content:
@@ -32,30 +32,6 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CreateVideoReply:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                message:
-                    type: string
-        CreateVideoRequest:
-            type: object
-            properties:
-                name:
-                    type: string
-                link:
-                    type: string
-                tags:
-                    type: array
-                    items:
-                        type: string
-                description:
-                    type: string
-                author:
-                    type: string
-                format:
-                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -80,5 +56,11 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        TestReply:
+            type: object
+            properties: {}
+        TestRequest:
+            type: object
+            properties: {}
 tags:
-    - name: Video
+    - name: Demo
