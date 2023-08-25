@@ -4,16 +4,19 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	pb "helloworld/api/helloworld/v1"
-	"helloworld/internal/data"
 )
 
+type DemoRepo interface {
+	Save(context.Context, *pb.CreateVideoRequest) (bool, error)
+}
+
 type DemoUsecase struct {
-	data *data.DemoRepo
+	repo DemoRepo
 	log  *log.Helper
 }
 
-func NewDemoUsecase(data *data.DemoRepo, logger log.Logger) *DemoUsecase {
-	return &DemoUsecase{data: data, log: log.NewHelper(logger)}
+func NewDemoUsecase(repo DemoRepo, logger log.Logger) *DemoUsecase {
+	return &DemoUsecase{repo: repo, log: log.NewHelper(logger)}
 }
 
 func (uc *DemoUsecase) Test(ctx context.Context, r *pb.TestRequest) (string, error) {
