@@ -6,10 +6,6 @@ import (
 	pb "helloworld/api/helloworld/v1"
 )
 
-type Video struct {
-	Hello string
-}
-
 type VideoRepo interface { // - repo 是个接口, 谁都可以实现
 	Save(context.Context, *pb.CreateVideoRequest) (bool, error)
 }
