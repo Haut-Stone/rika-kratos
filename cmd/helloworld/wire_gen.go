@@ -35,7 +35,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	videoUsecase := biz.NewVideoUsecase(videoRepo, logger)
 	videoService := service.NewVideoService(videoUsecase)
 	grpcServer := server.NewGRPCServer(confServer, greeterService, videoService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, videoService, logger)
+	demoUsecase := biz.NewDemoUsecase(, logger)
+	demoService := service.NewDemoService(demoUsecase)
+	httpServer := server.NewHTTPServer(confServer, greeterService, videoService, demoService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
