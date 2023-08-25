@@ -12,7 +12,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, video *service.VideoService, demo *service.DemoService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, video *service.VideoService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -32,6 +32,5 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, video *servi
 	srv.Handle("/debug/fgprof", fgprof.Handler())
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 	v1.RegisterVideoHTTPServer(srv, video) // ! 这里要手动注册,只前的东西才会加载
-	v1.RegisterDemoHTTPServer(srv, demo)
 	return srv
 }

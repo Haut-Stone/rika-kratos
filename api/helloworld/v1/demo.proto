@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package api.helloworld.v1;
 
-import "google/api/annotations.proto";
-
 option go_package = "helloworld/api/helloworld/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.helloworld.v1";
@@ -14,12 +12,6 @@ service Demo {
 	rpc DeleteDemo (DeleteDemoRequest) returns (DeleteDemoReply);
 	rpc GetDemo (GetDemoRequest) returns (GetDemoReply);
 	rpc ListDemo (ListDemoRequest) returns (ListDemoReply);
-	rpc HttpListDemo (ListDemoRequest) returns (ListDemoRequest) {
-		option (google.api.http) = {
-			post: "/try"
-			body: "*"
-		};
-	}
 }
 
 message CreateDemoRequest {}
