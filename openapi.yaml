@@ -61,6 +61,8 @@ components:
             properties:
                 message:
                     type: string
+                errorMsg:
+                    type: string
         TestRequest:
             type: object
             properties:

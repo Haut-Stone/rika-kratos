@@ -42,4 +42,5 @@ message TestRequest {
 }
 message TestReply {
 	string message = 1;
+	string errorMsg = 2;
 }

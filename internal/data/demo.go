@@ -18,6 +18,6 @@ func NewDemoRepo(data *Data, logger log.Logger) biz.DemoRepo { // - repo 的实�
 	}
 }
 
-func (v *demoRepo) GetDB() (*redis.Client, error) {
+func (v *demoRepo) GetRDB() (*redis.Client, error) {
 	return v.data.rdb, nil
 }

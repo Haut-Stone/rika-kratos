@@ -35,8 +35,8 @@ func (s *DemoService) ListDemo(ctx context.Context, req *pb.ListDemoRequest) (*p
 func (s *DemoService) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestReply, error) {
 	res, err := s.uc.Test(ctx, req)
 	if err != nil {
-		return nil, err
+		return &pb.TestReply{Message: res, ErrorMsg: err.Error()}, nil
 	}
 	fmt.Println(res)
-	return &pb.TestReply{Message: res}, nil
+	return &pb.TestReply{Message: res, ErrorMsg: ""}, nil
 }
