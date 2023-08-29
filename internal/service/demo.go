@@ -38,5 +38,5 @@ func (s *DemoService) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestRe
 		return nil, err
 	}
 	fmt.Println(res)
-	return &pb.TestReply{}, nil
+	return &pb.TestReply{Message: res}, nil
 }

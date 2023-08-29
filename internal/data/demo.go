@@ -1,9 +1,8 @@
 package data
 
 import (
-	"context"
 	"github.com/go-kratos/kratos/v2/log"
-	pb "helloworld/api/helloworld/v1"
+	"github.com/go-redis/redis/v8"
 	"helloworld/internal/biz"
 )
 
@@ -19,10 +18,6 @@ func NewDemoRepo(data *Data, logger log.Logger) biz.DemoRepo { // - repo 的实�
 	}
 }
 
-func (v *demoRepo) Save(ctx context.Context, r *pb.CreateVideoRequest) (bool, error) {
-	err := v.data.rdb.LPush(ctx, "videos", r.Name+"."+r.Format).Err()
-	if err != nil {
-		return false, err
-	}
-	return true, nil
+func (v *demoRepo) GetDB() (*redis.Client, error) {
+	return v.data.rdb, nil
 }
