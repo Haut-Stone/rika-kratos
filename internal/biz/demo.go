@@ -31,6 +31,8 @@ func (uc *DemoUsecase) Test(ctx context.Context, r *pb.TestRequest) (res string,
 		res, err = uc.TestRedisSet(ctx, r)
 	case "testRedisList":
 		res, err = uc.TestRedisList(ctx, r)
+	case "testAssert":
+		res, err = uc.TestAssert(ctx, r)
 	default:
 		return "请检查传入参数 type 设置", nil
 	}
@@ -84,5 +86,14 @@ func (uc *DemoUsecase) TestRedisList(ctx context.Context, r *pb.TestRequest) (re
 		rdb.LPush(ctx, "test", r.Type)
 	})
 
+	return res, err
+}
+
+func (uc *DemoUsecase) TestAssert(ctx context.Context, r *pb.TestRequest) (res string, err error) {
+	var x interface{}
+	x = "hitori"
+	// 通过 ok 参数判断断言是否成功
+	value, ok := x.(int)
+	fmt.Println(value, ok)
 	return res, err
 }
