@@ -17,19 +17,19 @@ func NewDemoService(uc *biz.DemoUsecase) *DemoService {
 	return &DemoService{uc: uc}
 }
 
-func (s *DemoService) CreateDemo(ctx context.Context, req *pb.CreateDemoRequest) (*pb.CreateDemoReply, error) {
+func (s *DemoService) CreateDemo(_ context.Context, _ *pb.CreateDemoRequest) (*pb.CreateDemoReply, error) {
 	return &pb.CreateDemoReply{}, nil
 }
-func (s *DemoService) UpdateDemo(ctx context.Context, req *pb.UpdateDemoRequest) (*pb.UpdateDemoReply, error) {
+func (s *DemoService) UpdateDemo(_ context.Context, _ *pb.UpdateDemoRequest) (*pb.UpdateDemoReply, error) {
 	return &pb.UpdateDemoReply{}, nil
 }
-func (s *DemoService) DeleteDemo(ctx context.Context, req *pb.DeleteDemoRequest) (*pb.DeleteDemoReply, error) {
+func (s *DemoService) DeleteDemo(_ context.Context, _ *pb.DeleteDemoRequest) (*pb.DeleteDemoReply, error) {
 	return &pb.DeleteDemoReply{}, nil
 }
-func (s *DemoService) GetDemo(ctx context.Context, req *pb.GetDemoRequest) (*pb.GetDemoReply, error) {
+func (s *DemoService) GetDemo(_ context.Context, _ *pb.GetDemoRequest) (*pb.GetDemoReply, error) {
 	return &pb.GetDemoReply{}, nil
 }
-func (s *DemoService) ListDemo(ctx context.Context, req *pb.ListDemoRequest) (*pb.ListDemoReply, error) {
+func (s *DemoService) ListDemo(_ context.Context, _ *pb.ListDemoRequest) (*pb.ListDemoReply, error) {
 	return &pb.ListDemoReply{}, nil
 }
 func (s *DemoService) Test(ctx context.Context, req *pb.TestRequest) (*pb.TestReply, error) {

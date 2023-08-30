@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"helloworld/internal/conf"
@@ -65,7 +66,12 @@ func main() {
 			file.NewSource(flagconf),
 		),
 	)
-	defer c.Close()
+	defer func(c config.Config) {
+		err := c.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(c)
 
 	if err := c.Load(); err != nil {
 		panic(err)

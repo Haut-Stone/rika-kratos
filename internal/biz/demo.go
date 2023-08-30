@@ -89,7 +89,7 @@ func (uc *DemoUsecase) TestRedisList(ctx context.Context, r *pb.TestRequest) (re
 	return res, err
 }
 
-func (uc *DemoUsecase) TestAssert(ctx context.Context, r *pb.TestRequest) (res string, err error) {
+func (uc *DemoUsecase) TestAssert(_ context.Context, _ *pb.TestRequest) (res string, err error) {
 	var x interface{}
 	x = "hitori"
 	// 通过 ok 参数判断断言是否成功
