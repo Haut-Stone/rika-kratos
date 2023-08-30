@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 )
@@ -40,6 +41,7 @@ func TestReflectStructField(t *testing.T) {
 	if catType, ok := typeOfCat.FieldByName("Type"); ok {
 		// 从tag中取出需要的tag
 		fmt.Println(catType.Tag.Get("json"), catType.Tag.Get("id"))
+		assert.Equal(t, 100, catType.Tag.Get("id"))
 	}
 }
 
